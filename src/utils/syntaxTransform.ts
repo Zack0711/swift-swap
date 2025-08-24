@@ -8,9 +8,9 @@ export interface TransformResult {
   error?: string;
 }
 
-// Legacy function for backward compatibility (defaults to React rules)
+// Legacy function for backward compatibility (defaults to Table rules)
 export function transformSyntax(input: string): TransformResult {
-  return transformSyntaxWithRuleSet(input, 'react');
+  return transformSyntaxWithRuleSet(input, 'table');
 }
 
 // New function that uses rule sets

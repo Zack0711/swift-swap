@@ -8,210 +8,27 @@ export class RuleSetManager {
   }
 
   private initializeRuleSets(): void {
-    // React/JSX Rules (Default - extends v1.0.0)
-    const reactRules: TransformationRule[] = [
+    // Table Transfer Rules
+    const tableRules: TransformationRule[] = [
       {
-        pattern: /class="/g,
-        replacement: 'className="',
-        type: 'attribute',
-        description: 'Convert class to className for React'
-      },
-      {
-        pattern: /for="/g,
-        replacement: 'htmlFor="',
-        type: 'attribute',
-        description: 'Convert for to htmlFor for React'
-      },
-      {
-        pattern: /<!--\s*(.+?)\s*-->/g,
-        replacement: '{/* $1 */}',
-        type: 'comment',
-        description: 'Convert HTML comments to JSX comments'
-      },
-      {
-        pattern: /<br>/g,
-        replacement: '<br />',
+        id: 'transform-tables',
+        name: 'Complete Table Transformation',
+        description: 'Wrap tables, style elements, and format cells',
         type: 'tag',
-        description: 'Convert br tags to self-closing'
-      },
-      {
-        pattern: /<hr>/g,
-        replacement: '<hr />',
-        type: 'tag',
-        description: 'Convert hr tags to self-closing'
-      },
-      {
-        pattern: /<img([^>]+)>/g,
-        replacement: '<img$1 />',
-        type: 'tag',
-        description: 'Convert img tags to self-closing'
-      },
-      {
-        pattern: /(\w+)-(\w+)="/g,
-        replacement: (_match, first, second) => {
-          const camelCase = first + second.charAt(0).toUpperCase() + second.slice(1);
-          return `${camelCase}="`;
-        },
-        type: 'case',
-        description: 'Convert kebab-case attributes to camelCase'
-      }
-    ];
-
-    // Vue.js Rules
-    const vueRules: TransformationRule[] = [
-      {
-        pattern: /class="/g,
-        replacement: ':class="',
-        type: 'attribute',
-        description: 'Convert class to Vue dynamic class binding'
-      },
-      {
-        pattern: /onclick="/g,
-        replacement: '@click="',
-        type: 'attribute',
-        description: 'Convert onclick to Vue click event'
-      },
-      {
-        pattern: /onchange="/g,
-        replacement: '@change="',
-        type: 'attribute',
-        description: 'Convert onchange to Vue change event'
-      },
-      {
-        pattern: /oninput="/g,
-        replacement: '@input="',
-        type: 'attribute',
-        description: 'Convert oninput to Vue input event'
-      },
-      {
-        pattern: /style="/g,
-        replacement: ':style="',
-        type: 'attribute',
-        description: 'Convert style to Vue dynamic style binding'
-      },
-      {
-        pattern: /v-bind:(\w+)="/g,
-        replacement: ':$1="',
-        type: 'attribute',
-        description: 'Shorthand v-bind syntax'
-      },
-      {
-        pattern: /v-on:(\w+)="/g,
-        replacement: '@$1="',
-        type: 'attribute',
-        description: 'Shorthand v-on syntax'
-      }
-    ];
-
-    // Angular Rules
-    const angularRules: TransformationRule[] = [
-      {
-        pattern: /class="/g,
-        replacement: '[class]="',
-        type: 'attribute',
-        description: 'Convert class to Angular property binding'
-      },
-      {
-        pattern: /onclick="/g,
-        replacement: '(click)="',
-        type: 'attribute',
-        description: 'Convert onclick to Angular click event'
-      },
-      {
-        pattern: /onchange="/g,
-        replacement: '(change)="',
-        type: 'attribute',
-        description: 'Convert onchange to Angular change event'
-      },
-      {
-        pattern: /oninput="/g,
-        replacement: '(input)="',
-        type: 'attribute',
-        description: 'Convert oninput to Angular input event'
-      },
-      {
-        pattern: /value="/g,
-        replacement: '[value]="',
-        type: 'attribute',
-        description: 'Convert value to Angular property binding'
-      },
-      {
-        pattern: /disabled="/g,
-        replacement: '[disabled]="',
-        type: 'attribute',
-        description: 'Convert disabled to Angular property binding'
-      },
-      {
-        pattern: /hidden="/g,
-        replacement: '[hidden]="',
-        type: 'attribute',
-        description: 'Convert hidden to Angular property binding'
-      }
-    ];
-
-    // Web Components Rules
-    const webComponentRules: TransformationRule[] = [
-      {
-        pattern: /onclick="/g,
-        replacement: '@click="',
-        type: 'attribute',
-        description: 'Convert onclick to custom element event'
-      },
-      {
-        pattern: /onchange="/g,
-        replacement: '@change="',
-        type: 'attribute',
-        description: 'Convert onchange to custom element event'
-      },
-      {
-        pattern: /class="/g,
-        replacement: 'class="',
-        type: 'attribute',
-        description: 'Maintain standard class attribute'
-      },
-      {
-        pattern: /<(\w+-\w+)([^>]*)>/g,
-        replacement: '<$1$2>',
-        type: 'tag',
-        description: 'Custom element tags (no changes needed)'
+        transform: (input: string): string => {
+          return this.transformTables(input);
+        }
       }
     ];
 
     // Initialize rule sets
-    this.ruleSets.set('react', {
-      id: 'react',
-      name: 'react',
-      displayName: 'React/JSX',
-      description: 'Convert HTML to React JSX syntax',
-      icon: '⚛️',
-      rules: reactRules
-    });
-
-    this.ruleSets.set('vue', {
-      id: 'vue',
-      name: 'vue',
-      displayName: 'Vue.js',
-      description: 'Convert HTML to Vue.js template syntax',
-      icon: '🟢',
-      rules: vueRules
-    });
-
-    this.ruleSets.set('angular', {
-      id: 'angular',
-      name: 'angular',
-      displayName: 'Angular',
-      description: 'Convert HTML to Angular template syntax',
-      icon: '🅰️',
-      rules: angularRules
-    });
-
-    this.ruleSets.set('webcomponents', {
-      id: 'webcomponents',
-      name: 'webcomponents',
-      displayName: 'Web Components',
-      description: 'Convert HTML for Web Components',
-      icon: '🧩',
-      rules: webComponentRules
+    this.ruleSets.set('table', {
+      id: 'table',
+      name: 'table',
+      displayName: 'Table Transfer',
+      description: 'Wrap tables with scrollable containers and format cells',
+      icon: '📊',
+      rules: tableRules
     });
   }
 
@@ -240,15 +57,12 @@ export class RuleSetManager {
       let transformed = input;
       let appliedRules = 0;
 
-      // Apply each rule in the rule set
+      // Apply each transformation function in the rule set
       for (const rule of ruleSet.rules) {
         const beforeTransform = transformed;
         
-        if (typeof rule.replacement === 'string') {
-          transformed = transformed.replace(rule.pattern, rule.replacement);
-        } else {
-          transformed = transformed.replace(rule.pattern, rule.replacement);
-        }
+        // Apply the transformation function
+        transformed = rule.transform(transformed);
         
         // Count if this rule made changes
         if (beforeTransform !== transformed) {
@@ -270,6 +84,64 @@ export class RuleSetManager {
         appliedRules: 0,
         ruleSetUsed: ruleSetType
       };
+    }
+  }
+
+  // Complete table transformation function using HTML object parsing
+  private transformTables(input: string): string {
+    try {
+      // Create a DOM parser to work with HTML objects
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(input, 'text/html');
+      
+      // Step 1: Find all <table> elements
+      const allTables = Array.from(doc.querySelectorAll('table'));
+      
+      // Step 2: Filter out tables whose parent element is a <div> with class "table-scroll sticky-top"
+      const tablesToTransform = allTables.filter(table => {
+        const parent = table.parentElement;
+        if (parent && parent.tagName.toLowerCase() === 'div') {
+          const parentClasses = parent.className.split(' ');
+          const hasTableScroll = parentClasses.includes('table-scroll');
+          const hasStickyTop = parentClasses.includes('sticky-top');
+          return !(hasTableScroll && hasStickyTop);
+        }
+        return true; // Transform if no parent div or not the right class
+      });
+
+      // Step 3: Process remaining tables
+      tablesToTransform.forEach(table => {
+        // Step 3a: Set table style to "min-width:600px; width:100%"
+        table.setAttribute('style', 'min-width:600px; width:100%');
+
+        // Step 3b: Set class of all <td> elements to "text-nowrap text-mono"
+        const tdElements = table.querySelectorAll('td');
+        tdElements.forEach(td => {
+          td.className = 'text-nowrap text-mono';
+        });
+
+        // Step 3c: Wrap table in <div> with class "table-scroll sticky-top" and style "max-height:300px"
+        const wrapper = doc.createElement('div');
+        wrapper.className = 'table-scroll sticky-top';
+        wrapper.setAttribute('style', 'max-height:300px');
+        
+        // Insert wrapper before table and move table into wrapper
+        const parent = table.parentNode;
+        if (parent) {
+          parent.insertBefore(wrapper, table);
+          wrapper.appendChild(table);
+        }
+      });
+
+      // Return the transformed HTML
+      // Extract only the body content to avoid html/head tags
+      const bodyContent = doc.body.innerHTML;
+      return bodyContent || input; // Fallback to original input if parsing fails
+      
+    } catch (error) {
+      // Fallback to original input if DOM parsing fails
+      console.warn('DOM parsing failed, returning original input:', error);
+      return input;
     }
   }
 

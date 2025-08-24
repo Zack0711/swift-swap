@@ -4,12 +4,12 @@ import RuleSelector from './components/RuleSelector';
 import { RuleSetType } from './types/rulesets';
 
 function App() {
-  const [selectedRuleSet, setSelectedRuleSet] = useState<RuleSetType>('react');
+  const [selectedRuleSet, setSelectedRuleSet] = useState<RuleSetType>('table');
 
   // Load saved rule set preference on mount
   useEffect(() => {
     const savedRuleSet = localStorage.getItem('swiftswap-ruleset') as RuleSetType;
-    if (savedRuleSet && ['react', 'vue', 'angular', 'webcomponents'].includes(savedRuleSet)) {
+    if (savedRuleSet && ['table'].includes(savedRuleSet)) {
       setSelectedRuleSet(savedRuleSet);
     }
   }, []);

@@ -241,14 +241,8 @@ export class StatisticsCalculator {
   
   private getRuleSetDisplayName(ruleSet: RuleSetType): string {
     switch (ruleSet) {
-      case 'react':
-        return 'React/JSX';
-      case 'vue':
-        return 'Vue.js';
-      case 'angular':
-        return 'Angular';
-      case 'webcomponents':
-        return 'Web Components';
+      case 'table':
+        return 'Table Transfer';
       default:
         return 'Unknown';
     }

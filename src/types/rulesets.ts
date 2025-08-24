@@ -1,10 +1,11 @@
-export type RuleSetType = 'react' | 'vue' | 'angular' | 'webcomponents';
+export type RuleSetType = 'table';
 
 export interface TransformationRule {
-  pattern: RegExp;
-  replacement: string | ((match: string, ...args: string[]) => string);
-  type: 'attribute' | 'tag' | 'comment' | 'case';
+  id: string;
+  name: string;
   description: string;
+  type: 'attribute' | 'tag' | 'comment' | 'case';
+  transform: (input: string) => string;
 }
 
 export interface RuleSet {

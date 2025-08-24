@@ -1,20 +1,20 @@
 # SwiftSwap - HTML Syntax Converter
 
-A modern, responsive web application that converts HTML syntax for multiple frameworks in real-time. Built with React 18+, TypeScript, and Tailwind CSS.
+A modern, responsive web application that transforms HTML tables with scrollable containers and formatting in real-time. Built with React 18+, TypeScript, and Tailwind CSS.
 
 ## 🚀 Features
 
 ### Core Conversion Engine
-- **Multi-Framework Support**: Convert HTML for React/JSX, Vue.js, Angular, and Web Components
-- **Rule Set Selection**: Choose framework-specific transformation rules from header dropdown
-- **Real-time Conversion**: Instantly apply selected transformations to your HTML
-- **Intelligent Transformations**: Context-aware attribute, tag, and syntax conversions
+- **Table Transformation**: Convert HTML tables to scrollable, formatted containers
+- **Smart Detection**: Automatically identifies tables that need transformation
+- **Real-time Conversion**: Instantly apply table transformations to your HTML
+- **Intelligent Processing**: Context-aware table wrapping and cell formatting
 
 ### User Interface
 - **Responsive Design**: Optimized for both desktop and mobile devices
-- **Desktop Layout**: Side-by-side input and output panels with rule selector
+- **Desktop Layout**: Side-by-side input and output panels
 - **Mobile Layout**: Tab-based interface with smooth transitions
-- **Framework Icons**: Visual indicators for each supported framework
+- **Clean Interface**: Focused on table transformation functionality
 
 ### Analytics & Statistics
 - **Real-time Metrics**: Track modifications, additions, and removals line-by-line
@@ -23,7 +23,6 @@ A modern, responsive web application that converts HTML syntax for multiple fram
 - **Interactive Dashboard**: Collapsible statistics panel with detailed breakdowns
 
 ### User Experience
-- **Persistent Preferences**: Automatically saves your preferred framework selection
 - **Error Handling**: Comprehensive error messages and validation
 - **Loading States**: Visual feedback during conversion process
 - **One-Click Clear**: Easy reset functionality
@@ -73,17 +72,17 @@ swift-swap/
 │   │   ├── TextAreaPanel.tsx      # Input/output text areas
 │   │   ├── ConvertButton.tsx      # Conversion button
 │   │   ├── TabView.tsx            # Mobile tab interface
-│   │   ├── RuleSelector.tsx       # Framework rule selector
+│   │   ├── RuleSelector.tsx       # Rule selector (single rule set)
 │   │   ├── StatisticsPanel.tsx    # Conversion statistics display
 │   │   └── StatisticsCard.tsx     # Individual metric cards
 │   ├── utils/
 │   │   ├── syntaxTransform.ts     # Legacy conversion logic
-│   │   ├── ruleSetManager.ts      # Multi-framework rule engine
+│   │   ├── ruleSetManager.ts      # Table transformation rule engine
 │   │   └── statisticsCalculator.ts # Statistics calculation engine
 │   ├── types/
 │   │   ├── rulesets.ts            # Rule set type definitions
 │   │   └── statistics.ts          # Statistics interfaces
-│   ├── App.tsx              # Root component with rule selector
+│   ├── App.tsx              # Root component
 │   ├── main.tsx             # Application entry point
 │   └── index.css            # Global styles
 ├── public/                  # Static assets
@@ -93,33 +92,28 @@ swift-swap/
 
 ## 📱 Usage
 
-### Framework Selection
-1. **Choose Your Framework**: Use the dropdown in the header to select your target framework:
-   - ⚛️ **React/JSX**: Convert to React JSX syntax (className, htmlFor, JSX comments)
-   - 🟢 **Vue.js**: Convert to Vue template syntax (v-bind, v-on, dynamic bindings)
-   - 🅰️ **Angular**: Convert to Angular template syntax (property/event binding)
-   - 🧩 **Web Components**: Convert for custom elements and web standards
+### Table Transformation
+1. **Automatic Processing**: The application automatically processes your HTML tables:
+   - 📊 **Table Transfer**: Wraps tables with scrollable containers and formats cells
 
 ### Desktop Experience
-1. Select your target framework from the header dropdown
-2. Enter your HTML syntax in the left input panel
-3. Click the "Convert" button to apply framework-specific transformations
-4. View the converted syntax in the right output panel
-5. Review detailed conversion statistics in the expandable panel below
-6. Use "Clear All" to reset both panels
+1. Enter your HTML with tables in the left input panel
+2. Click the "Convert" button to apply table transformations
+3. View the converted syntax in the right output panel
+4. Review detailed conversion statistics in the expandable panel below
+5. Use "Clear All" to reset both panels
 
 ### Mobile Experience
-1. Select your framework from the header dropdown
-2. Use the "Input HTML" tab to enter your syntax
-3. Tap "Convert" to process the conversion with selected rules
-4. Automatically switches to "Converted HTML" tab to show results
-5. Scroll down to view conversion statistics
-6. Use the "Clear" button in the input tab to reset
+1. Use the "Input HTML" tab to enter your HTML with tables
+2. Tap "Convert" to process the table transformations
+3. Automatically switches to "Converted HTML" tab to show results
+4. Scroll down to view conversion statistics
+5. Use the "Clear" button in the input tab to reset
 
 ### Statistics Dashboard
 - **Overview**: Line-by-line changes (modified, added, removed, unchanged)
-- **Transformations**: Detailed breakdown by type (attributes, tags, comments, case)
-- **Details**: Processing time, accuracy percentage, character counts, active rule set
+- **Transformations**: Detailed breakdown by type (attributes, tags, styling)
+- **Details**: Processing time, accuracy percentage, character counts
 
 ## ⚡ Available Scripts
 
@@ -132,36 +126,35 @@ yarn type-check   # Run TypeScript type checking
 yarn lint         # Run ESLint
 ```
 
-## 🔄 Framework-Specific Transformations
+## 🔄 Table Transfer Transformations
 
-### React/JSX Transformations
-- `class="..."` → `className="..."` (JSX attribute)
-- `for="..."` → `htmlFor="..."` (JSX attribute)
-- `<!-- comment -->` → `{/* comment */}` (JSX comments)
-- `<br>` → `<br />` (Self-closing tags)
-- `<hr>` → `<hr />` (Self-closing tags)
-- `<img>` → `<img />` (Self-closing tags)
-- `kebab-case` → `camelCase` (Attribute names)
+### Table Processing Rules
+- **Table Wrapping**: Wraps unwrapped tables with `<div class="table-scroll sticky-top" style="max-height:300px">`
+- **Table Styling**: Sets table style to `min-width:600px; width:100%`
+- **Cell Formatting**: Adds `text-nowrap text-mono` classes to all `<td>` elements
+- **Responsive Design**: Creates scrollable containers for large tables
+- **Skip Already Wrapped**: Ignores tables already wrapped with `table-scroll sticky-top` classes
 
-### Vue.js Transformations
-- `class="..."` → `:class="..."` (Dynamic class binding)
-- `onclick="..."` → `@click="..."` (Event binding)
-- `onchange="..."` → `@change="..."` (Event binding)
-- `style="..."` → `:style="..."` (Dynamic style binding)
-- `v-bind:attr` → `:attr` (Shorthand binding)
-- `v-on:event` → `@event` (Shorthand event)
+### Example Transformation
+```html
+<!-- Input -->
+<table>
+  <tr>
+    <td>Cell 1</td>
+    <td class="existing">Cell 2</td>
+  </tr>
+</table>
 
-### Angular Transformations
-- `class="..."` → `[class]="..."` (Property binding)
-- `onclick="..."` → `(click)="..."` (Event binding)
-- `value="..."` → `[value]="..."` (Property binding)
-- `disabled="..."` → `[disabled]="..."` (Property binding)
-- `hidden="..."` → `[hidden]="..."` (Property binding)
-
-### Web Components Transformations
-- `onclick="..."` → `@click="..."` (Custom element events)
-- `onchange="..."` → `@change="..."` (Custom element events)
-- Maintains standard HTML attributes for web standards compliance
+<!-- Output -->
+<div class="table-scroll sticky-top" style="max-height:300px">
+<table style="min-width:600px; width:100%">
+  <tr>
+    <td class="text-nowrap text-mono">Cell 1</td>
+    <td class="existing text-nowrap text-mono">Cell 2</td>
+  </tr>
+</table>
+</div>
+```
 
 ## 🚀 Deployment
 
@@ -182,31 +175,31 @@ yarn build        # Build the application
 
 ### Adding New Transformations
 
-#### Method 1: Extend Existing Rule Sets
-Edit `src/utils/ruleSetManager.ts` to add rules to existing frameworks:
+#### Extend Table Rules
+Edit `src/utils/ruleSetManager.ts` to add more table transformation rules:
 
 ```typescript
-// Add to React rules array
+// Add to table rules array
 {
-  pattern: /your-pattern/g,
+  pattern: /your-table-pattern/g,
   replacement: 'your-replacement',
   type: 'attribute',
-  description: 'Your transformation description'
+  description: 'Your table transformation description'
 }
 ```
 
-#### Method 2: Create New Rule Set
-Add a new framework by extending the RuleSetManager:
+#### Create Additional Rule Sets
+Add new transformation types by extending the RuleSetManager:
 
 ```typescript
 // Add new rule set to constructor
-this.ruleSets.set('yourframework', {
-  id: 'yourframework',
-  name: 'yourframework',
-  displayName: 'Your Framework',
-  description: 'Convert HTML for Your Framework',
+this.ruleSets.set('newtype', {
+  id: 'newtype',
+  name: 'newtype',
+  displayName: 'New Transformation Type',
+  description: 'Convert HTML for specific use case',
   icon: '🔧',
-  rules: yourFrameworkRules
+  rules: newTypeRules
 });
 ```
 
@@ -247,12 +240,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📝 Changelog
 
 ### v1.1.0 (Latest)
-- ✨ **New**: Multi-framework support (React, Vue.js, Angular, Web Components)
-- ✨ **New**: Framework rule selector in header with persistent preferences
+- ✨ **New**: Table Transfer transformation system
+- ✨ **New**: Automatic table wrapping with scrollable containers
 - ✨ **New**: Real-time conversion statistics with detailed metrics
 - ✨ **New**: Interactive statistics dashboard with collapsible sections
 - 🎨 **Enhanced**: Mobile responsive design for new components
 - 🔧 **Improved**: Type-safe architecture with comprehensive interfaces
+- 🗑️ **Removed**: React, Vue.js, Angular, Web Components rule sets (focused on table transformations)
 
 ### v1.0.0
 - 🎉 Initial release with React/JSX conversion support
