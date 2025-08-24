@@ -1,4 +1,5 @@
 import { RuleSet, RuleSetType, TransformationRule, TransformResult } from '../types/rulesets';
+import { transformTables } from './rules/transformTables';
 
 export class RuleSetManager {
   private ruleSets: Map<RuleSetType, RuleSet> = new Map();
@@ -16,7 +17,7 @@ export class RuleSetManager {
         description: 'Wrap tables, style elements, and format cells',
         type: 'tag',
         transform: (input: string): string => {
-          return this.transformTables(input);
+          return transformTables(input);
         }
       }
     ];
@@ -84,64 +85,6 @@ export class RuleSetManager {
         appliedRules: 0,
         ruleSetUsed: ruleSetType
       };
-    }
-  }
-
-  // Complete table transformation function using HTML object parsing
-  private transformTables(input: string): string {
-    try {
-      // Create a DOM parser to work with HTML objects
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(input, 'text/html');
-      
-      // Step 1: Find all <table> elements
-      const allTables = Array.from(doc.querySelectorAll('table'));
-      
-      // Step 2: Filter out tables whose parent element is a <div> with class "table-scroll sticky-top"
-      const tablesToTransform = allTables.filter(table => {
-        const parent = table.parentElement;
-        if (parent && parent.tagName.toLowerCase() === 'div') {
-          const parentClasses = parent.className.split(' ');
-          const hasTableScroll = parentClasses.includes('table-scroll');
-          const hasStickyTop = parentClasses.includes('sticky-top');
-          return !(hasTableScroll && hasStickyTop);
-        }
-        return true; // Transform if no parent div or not the right class
-      });
-
-      // Step 3: Process remaining tables
-      tablesToTransform.forEach(table => {
-        // Step 3a: Set table style to "min-width:600px; width:100%"
-        table.setAttribute('style', 'min-width:600px; width:100%');
-
-        // Step 3b: Set class of all <td> elements to "text-nowrap text-mono"
-        const tdElements = table.querySelectorAll('td');
-        tdElements.forEach(td => {
-          td.className = 'text-nowrap text-mono';
-        });
-
-        // Step 3c: Wrap table in <div> with class "table-scroll sticky-top" and style "max-height:300px"
-        const wrapper = doc.createElement('div');
-        wrapper.className = 'table-scroll sticky-top';
-        wrapper.setAttribute('style', 'max-height:300px');
-        
-        // Insert wrapper before table and move table into wrapper
-        const parent = table.parentNode;
-        if (parent) {
-          parent.insertBefore(wrapper, table);
-          wrapper.appendChild(table);
-        }
-      });
-
-      // Return the transformed HTML
-      // Extract only the body content to avoid html/head tags
-      const bodyContent = doc.body.innerHTML;
-      return bodyContent || input; // Fallback to original input if parsing fails
-      
-    } catch (error) {
-      // Fallback to original input if DOM parsing fails
-      console.warn('DOM parsing failed, returning original input:', error);
-      return input;
     }
   }
 
