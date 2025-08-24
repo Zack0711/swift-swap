@@ -2,13 +2,23 @@ import React, { useState } from 'react';
 import TextAreaPanel from './TextAreaPanel';
 import ConvertButton from './ConvertButton';
 import TabView from './TabView';
-import { transformSyntax } from '../utils/syntaxTransform';
+import StatisticsPanel from './StatisticsPanel';
+import { transformSyntaxWithRuleSet } from '../utils/syntaxTransform';
+import { statisticsCalculator } from '../utils/statisticsCalculator';
+import { RuleSetType } from '../types/rulesets';
+import { ConversionStats } from '../types/statistics';
 
-const SyntaxConverter: React.FC = () => {
+interface SyntaxConverterProps {
+  selectedRuleSet: RuleSetType;
+}
+
+const SyntaxConverter: React.FC<SyntaxConverterProps> = ({ selectedRuleSet }) => {
   const [inputValue, setInputValue] = useState('');
   const [outputValue, setOutputValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState<ConversionStats | null>(null);
+  const [showStatistics, setShowStatistics] = useState(true);
 
   const handleConvert = async () => {
     if (!inputValue.trim()) {
@@ -22,13 +32,25 @@ const SyntaxConverter: React.FC = () => {
     // Simulate async operation for better UX
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    const result = transformSyntax(inputValue);
+    const startTime = performance.now();
+    const result = transformSyntaxWithRuleSet(inputValue, selectedRuleSet);
+    const processingTime = performance.now() - startTime;
 
     if (result.success) {
       setOutputValue(result.result);
+      
+      // Calculate statistics
+      const conversionStats = statisticsCalculator.calculateStats(
+        inputValue,
+        result.result,
+        selectedRuleSet,
+        processingTime
+      );
+      setStats(conversionStats);
     } else {
       setError(result.error || 'Conversion failed');
       setOutputValue('');
+      setStats(null);
     }
 
     setLoading(false);
@@ -38,6 +60,11 @@ const SyntaxConverter: React.FC = () => {
     setInputValue('');
     setOutputValue('');
     setError(null);
+    setStats(null);
+  };
+
+  const handleToggleStatistics = () => {
+    setShowStatistics(!showStatistics);
   };
 
   return (
@@ -100,6 +127,15 @@ const SyntaxConverter: React.FC = () => {
           disabled={!inputValue.trim()}
         />
       </div>
+
+      {/* Statistics Panel */}
+      {stats && (
+        <StatisticsPanel
+          stats={stats}
+          visible={showStatistics}
+          onToggleVisibility={handleToggleStatistics}
+        />
+      )}
     </div>
   );
 };
